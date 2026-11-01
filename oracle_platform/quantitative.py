@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from decimal import Decimal, InvalidOperation
 from math import log
-from typing import Iterable
 
 D = Decimal
 
@@ -115,7 +115,7 @@ def weighted_wallet_score(metrics: dict[str, Decimal], sample_size: int, prior_s
     missing = set(weights) - set(metrics)
     if missing:
         raise ValueError(f"Missing wallet metrics: {sorted(missing)}")
-    for key, value in metrics.items():
+    for value in metrics.values():
         _probability(value)
     _probability(prior_score)
     raw = sum((metrics[k] * w for k, w in weights.items()), D("0"))

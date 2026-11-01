@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "oracle-private-platform"
-version = "0.6.0"
+version = "0.7.0.dev0"
 description = "Private prediction-market intelligence and paper-execution platform"
 requires-python = ">=3.12"
 dependencies = [
@@ -32,3 +32,20 @@ pythonpath = ["."]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+
+[tool.ruff.lint]
+# Explicit rule set so results do not change with the ruff version's defaults.
+# E501 is excluded: pre-v0.7 code has long lines; fixing them is churn without risk reduction.
+select = ["E", "F", "I", "UP", "B", "BLE", "S110"]
+ignore = ["E501", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# Intentional broad catches: the collector must never die on one bad frame or DB hiccup;
+# every such handler preserves raw evidence and records invalidation.
+"oracle_platform/collector.py" = ["BLE001", "S110"]
+# Reviewed 2026-11-01: each handler records the error and continues (fail-visible), or fails
+# closed (geoblock). None swallows silently. Narrowing them is tracked, not blocking.
+"oracle_platform/agent.py" = ["BLE001"]
+"oracle_platform/api.py" = ["BLE001"]
+"oracle_platform/wallet_discovery.py" = ["BLE001"]
+"scripts/*.py" = ["BLE001"]

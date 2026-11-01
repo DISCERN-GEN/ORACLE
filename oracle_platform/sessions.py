@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 from uuid import uuid4
 
@@ -26,14 +26,14 @@ class PaperSession:
     errors: int = 0
 
     @classmethod
-    def start(cls, hours: int = 12, now: datetime | None = None) -> "PaperSession":
+    def start(cls, hours: int = 12, now: datetime | None = None) -> PaperSession:
         if hours <= 0 or hours > 24:
             raise ValueError("Session duration must be between 1 and 24 hours")
-        now = now or datetime.now(timezone.utc)
+        now = now or datetime.now(UTC)
         return cls(str(uuid4()), now, now + timedelta(hours=hours), heartbeat_at=now)
 
     def refresh(self, now: datetime | None = None) -> SessionState:
-        now = now or datetime.now(timezone.utc)
+        now = now or datetime.now(UTC)
         if self.state == SessionState.RUNNING:
             self.heartbeat_at = now
             if now >= self.ends_at:

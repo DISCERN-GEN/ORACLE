@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 from urllib.parse import quote
@@ -86,7 +86,7 @@ class PolymarketClient:
         raw = await self._get(f"{settings.clob_url}/book", {"token_id": token_id})
         # Record local receipt time. Venue payload timestamp units are not relied on
         # for freshness; an unknown/millisecond timestamp must never look fresh by accident.
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         bids = tuple(BookLevel(Decimal(x["price"]), Decimal(x["size"])) for x in raw.get("bids", []))
         asks = tuple(BookLevel(Decimal(x["price"]), Decimal(x["size"])) for x in raw.get("asks", []))
         return OrderBook(

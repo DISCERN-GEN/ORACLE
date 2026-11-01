@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -62,7 +62,7 @@ class Store:
                        payload_hash, previous_hash, created_at)
                        VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,$8)""",
                     event_type, actor, entity_type, entity_id, canonical, digest, previous,
-                    datetime.now(timezone.utc),
+                    datetime.now(UTC),
                 )
 
     async def audit_tail(self, limit: int = 100) -> list[dict[str, Any]]:
@@ -519,8 +519,12 @@ class Store:
 
     async def save_clob_raw_frame(self, raw_payload: Any, connection_id: str,
                                   received_at: datetime, monotonic_ns: int,
-                                  frame_type: str = "json") -> int | None:
-        """Durably archive a socket frame before JSON decoding or event parsing."""
+                                  frame_type: str = "json", parent_message_id: int | None = None,
+                                  item_index: int | None = None) -> int | None:
+        """Durably archive a socket frame before JSON decoding or event parsing.
+
+        Array frames are stored once; their items are child rows that reference the parent
+        instead of copying the payload."""
         if not self.pool:
             return None
         payload = json.dumps(raw_payload, ensure_ascii=False, default=str)
@@ -528,11 +532,23 @@ class Store:
             return await conn.fetchval(
                 """INSERT INTO clob_market_messages(
                        connection_id,subscription_version,event_type,received_at,
-                       received_monotonic_ns,parser_version,raw_payload,parse_valid,raw_frame_type)
-                   VALUES($1,'assets_ids-market-v1','raw_frame',$2,$3,'raw-before-parse-v1',$4::jsonb,FALSE,$5)
+                       received_monotonic_ns,parser_version,raw_payload,parse_valid,raw_frame_type,
+                       parent_message_id,item_index)
+                   VALUES($1,'assets_ids-market-v1','raw_frame',$2,$3,'raw-before-parse-v1',$4::jsonb,
+                          FALSE,$5,$6,$7)
                    RETURNING message_id""",
                 connection_id, received_at, monotonic_ns, payload, frame_type,
+                parent_message_id, item_index,
             )
+
+    async def finalize_clob_array_parent(self, message_id: int, item_count: int) -> None:
+        """Mark a raw array frame as split into child event rows (payload kept once, here)."""
+        if not self.pool:
+            return
+        await self.pool.execute(
+            """UPDATE clob_market_messages SET event_type='frame_array', parse_valid=TRUE,
+                   parser_error=NULL, invalidation_reason=NULL, item_index=$2 WHERE message_id=$1""",
+            message_id, item_count)
 
     async def finalize_clob_raw_frame(self, message_id: int, event: dict[str, Any] | None,
                                      parser_error: str | None = None) -> None:
@@ -573,6 +589,50 @@ class Store:
                         "SELECT clob_mark_asset_valid($1,$2)",
                         event["asset_id"], event["received_at"],
                     )
+                    await conn.execute("SELECT clob_refresh_connection_health($1)", event["received_at"])
+
+    async def open_clob_capture_gap(self, connection_id: str, started_at: datetime, reason: str,
+                                    affected_asset_ids: list[str], attempt: int, gap_kind: str,
+                                    last_frame_at: datetime | None) -> int | None:
+        """Persist a gap as OPEN (ended_at NULL) before the vulnerable period can be lost to a crash."""
+        if not self.pool:
+            return None
+        return await self.pool.fetchval(
+            """INSERT INTO clob_capture_gaps(connection_id,started_at,reason,affected_asset_ids,
+                   connection_attempt,gap_kind,last_frame_at)
+               VALUES($1,$2,$3,$4::jsonb,$5,$6,$7) RETURNING gap_id""",
+            connection_id, started_at, reason, json.dumps(affected_asset_ids), attempt, gap_kind,
+            last_frame_at)
+
+    async def close_clob_capture_gap(self, gap_id: int, ended_at: datetime, reason: str,
+                                     recovered_at: datetime | None) -> None:
+        if not self.pool:
+            return
+        await self.pool.execute(
+            "UPDATE clob_capture_gaps SET ended_at=$2, reason=$3, recovered_at=$4 WHERE gap_id=$1",
+            gap_id, ended_at, reason, recovered_at)
+
+    async def adopt_open_clob_gap(self) -> dict[str, Any] | None:
+        """Earliest unresolved gap left by a crashed collector; the new run continues it."""
+        if not self.pool:
+            return None
+        row = await self.pool.fetchrow(
+            "SELECT gap_id, started_at, gap_kind FROM clob_capture_gaps "
+            "WHERE ended_at IS NULL ORDER BY started_at ASC LIMIT 1")
+        return dict(row) if row else None
+
+    async def set_clob_connection_state(self, state: str, at: datetime, gap_id: int | None = None,
+                                        detail: str | None = None) -> None:
+        if not self.pool:
+            return
+        await self.pool.execute("SELECT clob_set_connection_state($1,$2,$3,$4)", state, at, gap_id, detail)
+
+    async def clob_connection_health(self) -> dict[str, Any]:
+        if not self.pool:
+            return {"state": "unknown", "invalid_assets": None}
+        row = await self.pool.fetchrow("SELECT state, since, open_gap_id FROM clob_connection_state WHERE id=1")
+        invalid = await self.pool.fetchval("SELECT count(*) FROM clob_asset_validity WHERE state='invalid'")
+        return {**(dict(row) if row else {"state": "unknown"}), "invalid_assets": invalid}
 
     async def record_clob_capture_gap(self, connection_id: str, started_at: datetime,
                                       ended_at: datetime | None, reason: str,

@@ -1,0 +1,238 @@
+oracle_platform/agent.py:52:32: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/agent.py:56:53: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/agent.py:65:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/agent.py:76:66: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/api.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+oracle_platform/api.py:47:76: B008 Do not perform function call `Security` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/api.py:119:49: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/api.py:125:50: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/api.py:126:49: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/api.py:141:47: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/api.py:151:47: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/api.py:185:47: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/api.py:215:12: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/book_capture.py:6:30: F401 [*] `decimal.InvalidOperation` imported but unused
+oracle_platform/book_capture.py:25:9: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/book_capture.py:40:44: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/book_capture.py:53:48: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/book_capture.py:66:74: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/book_capture.py:79:44: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/collector.py:71:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/collector.py:78:9: S110 `try`-`except`-`pass` detected, consider logging the exception
+oracle_platform/collector.py:78:16: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/collector.py:128:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/collector.py:174:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/domain.py:35:39: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/domain.py:49:58: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/domain.py:52:35: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/domain.py:103:71: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/domain.py:113:37: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/domain.py:114:43: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/domain.py:115:34: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/domain.py:117:35: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/domain.py:120:43: UP037 [*] Remove quotes from type annotation
+oracle_platform/event_intelligence.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+oracle_platform/event_intelligence.py:90:66: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/event_intelligence.py:100:47: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/event_intelligence.py:132:21: FLY002 Consider f-string instead of string join
+oracle_platform/event_intelligence.py:182:41: FURB162 Unnecessary timezone replacement with zero offset
+oracle_platform/event_intelligence.py:189:40: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/event_intelligence.py:190:30: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/forecasting.py:5:1: UP035 [*] Import from `collections.abc` instead: `Iterable`
+oracle_platform/forecasting.py:15:22: RUF009 Do not perform function call `D` in dataclass defaults
+oracle_platform/forecasting.py:16:21: RUF009 Do not perform function call `D` in dataclass defaults
+oracle_platform/forecasting.py:26:56: UP037 [*] Remove quotes from type annotation
+oracle_platform/forecasting.py:37:27: RUF009 Do not perform function call `D` in dataclass defaults
+oracle_platform/opportunity.py:6:1: UP035 [*] Import from `collections.abc` instead: `Iterable`
+oracle_platform/opportunity.py:8:21: F401 [*] `.domain.BookLevel` imported but unused
+oracle_platform/opportunity.py:87:31: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/opportunity.py:166:31: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/paper_broker.py:67:57: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:69:59: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:69:96: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:71:68: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:78:70: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:79:74: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:82:111: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:84:67: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:88:78: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:89:92: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:92:46: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:99:25: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:99:85: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:109:55: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/paper_broker.py:109:92: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/polymarket.py:76:13: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/polymarket.py:82:13: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/polymarket.py:89:28: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/polymarket.py:115:13: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/polymarket.py:131:13: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/polymarket.py:148:13: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/polymarket.py:169:13: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/polymarket.py:181:13: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/portfolio.py:5:1: UP035 [*] Import from `collections.abc` instead: `Sequence`
+oracle_platform/portfolio.py:24:36: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/portfolio.py:25:35: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/portfolio.py:26:26: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/quantitative.py:5:1: UP035 [*] Import from `collections.abc` instead: `Iterable`
+oracle_platform/quantitative.py:10:20: PYI041 [*] Use `float` instead of `int | float`
+oracle_platform/quantitative.py:17:99: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/quantitative.py:25:105: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/quantitative.py:49:27: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/quantitative.py:50:29: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/quantitative.py:86:92: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/quantitative.py:102:97: B008 Do not perform function call `D` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+oracle_platform/quantitative.py:118:23: PERF102 When using only the values of a dict use the `values()` method
+oracle_platform/risk.py:36:35: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/risk.py:39:89: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/risk.py:54:128: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/risk.py:55:68: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/risk.py:56:60: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/risk.py:61:122: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/risk.py:74:34: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/sessions.py:29:69: UP037 [*] Remove quotes from type annotation
+oracle_platform/sessions.py:32:35: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/sessions.py:36:35: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/settings.py:29:39: RUF009 Do not perform function call `_decimal` in dataclass defaults
+oracle_platform/settings.py:30:41: RUF009 Do not perform function call `_decimal` in dataclass defaults
+oracle_platform/settings.py:31:49: RUF009 Do not perform function call `_decimal` in dataclass defaults
+oracle_platform/settings.py:32:45: RUF009 Do not perform function call `_decimal` in dataclass defaults
+oracle_platform/settings.py:33:37: RUF009 Do not perform function call `_decimal` in dataclass defaults
+oracle_platform/settings.py:34:41: RUF009 Do not perform function call `_decimal` in dataclass defaults
+oracle_platform/store.py:45:9: SIM117 [*] Use a single `with` statement with multiple contexts instead of nested `with` statements
+oracle_platform/store.py:54:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+oracle_platform/store.py:65:34: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/store.py:81:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+oracle_platform/store.py:230:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+oracle_platform/store.py:565:9: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+oracle_platform/store.py:691:39: FURB162 Unnecessary timezone replacement with zero offset
+oracle_platform/wallet_discovery.py:125:17: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/wallet_discovery.py:139:73: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_discovery.py:143:16: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:166:40: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_discovery.py:180:21: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/wallet_discovery.py:196:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:212:25: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/wallet_discovery.py:234:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:270:24: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/wallet_discovery.py:270:49: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/wallet_discovery.py:272:60: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_discovery.py:277:73: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/wallet_discovery.py:280:27: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/wallet_discovery.py:282:34: FURB157 [*] Verbose expression in `Decimal` constructor
+oracle_platform/wallet_discovery.py:337:21: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/wallet_discovery.py:358:48: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_discovery.py:367:16: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:374:44: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_discovery.py:426:60: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_discovery.py:522:25: TRY004 Prefer `TypeError` exception for invalid type
+oracle_platform/wallet_discovery.py:542:81: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_discovery.py:559:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:567:48: UP017 [*] Use `datetime.UTC` alias
+oracle_platform/wallet_intelligence.py:3:36: F401 [*] `dataclasses.field` imported but unused
+oracle_platform/wallet_intelligence.py:6:1: UP035 [*] Import from `collections.abc` instead: `Iterable`
+oracle_platform/wallet_intelligence.py:38:25: RUF009 Do not perform function call `D` in dataclass defaults
+oracle_platform/wallet_intelligence.py:39:27: RUF009 Do not perform function call `D` in dataclass defaults
+oracle_platform/wallet_intelligence.py:184:5: F841 Local variable `losses` is assigned to but never used
+oracle_platform/wallet_scoring.py:6:20: F401 [*] `typing.Any` imported but unused
+scripts/capture-orderbooks.py:1:1: EXE001 Shebang is present but file is not executable
+scripts/capture-orderbooks.py:14:35: F401 [*] `websockets.exceptions.ConnectionClosed` imported but unused
+scripts/capture-orderbooks.py:24:25: UP017 [*] Use `datetime.UTC` alias
+scripts/capture-orderbooks.py:70:32: UP041 [*] Replace aliased errors with `TimeoutError`
+scripts/capture-orderbooks.py:100:36: BLE001 Do not catch blind exception: `Exception`
+scripts/capture-orderbooks.py:108:20: BLE001 Do not catch blind exception: `Exception`
+scripts/capture-orderbooks.py:120:28: UP041 [*] Replace aliased errors with `TimeoutError`
+tests/test_book_capture.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+tests/test_book_capture.py:9:40: UP017 [*] Use `datetime.UTC` alias
+tests/test_book_capture.py:34:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_collector_faults.py:149:12: RUF015 Prefer `next(...)` over single element slice
+tests/test_collector_faults.py:162:13: RUF015 Prefer `next(...)` over single element slice
+tests/test_event_intelligence.py:14:72: UP017 [*] Use `datetime.UTC` alias
+tests/test_forecasting.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+tests/test_forecasting.py:9:25: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_forecasting.py:9:33: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_forecasting.py:17:44: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_forecasting.py:24:86: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:12:35: UP017 [*] Use `datetime.UTC` alias
+tests/test_opportunity.py:18:46: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:28:46: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:28:63: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:30:40: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:37:46: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:44:75: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:45:75: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:46:75: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:49:57: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_opportunity.py:54:64: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:9:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_paper_broker.py:11:51: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:12:51: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:12:81: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:14:37: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:15:68: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:18:40: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:19:43: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:22:48: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:27:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_paper_broker.py:28:68: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:29:37: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:30:67: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:31:61: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:34:30: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:38:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_paper_broker.py:39:68: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:40:37: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:41:67: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:42:61: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:44:30: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:48:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_paper_broker.py:49:73: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:50:37: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:51:65: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:57:70: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:58:67: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:61:48: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:66:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_paper_broker.py:67:68: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:68:60: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:69:37: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:70:70: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:71:62: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:72:70: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_paper_broker.py:73:61: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_portfolio.py:16:18: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_portfolio.py:31:17: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_portfolio.py:32:28: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_portfolio.py:33:39: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_quantitative.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+tests/test_quantitative.py:16:50: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_quantitative.py:23:46: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_quantitative.py:37:21: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_quantitative.py:46:37: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_risk_and_session.py:10:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_risk_and_session.py:11:65: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_risk_and_session.py:12:46: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_risk_and_session.py:14:68: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_risk_and_session.py:15:37: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_risk_and_session.py:40:24: UP017 [*] Use `datetime.UTC` alias
+tests/test_wallet_discovery.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+tests/test_wallet_discovery.py:4:22: F401 [*] `datetime.datetime` imported but unused
+tests/test_wallet_discovery.py:128:43: UP017 [*] Use `datetime.UTC` alias
+tests/test_wallet_intelligence.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+tests/test_wallet_intelligence.py:10:52: UP017 [*] Use `datetime.UTC` alias
+tests/test_wallet_intelligence.py:21:34: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_intelligence.py:22:56: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_intelligence.py:23:41: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_intelligence.py:23:79: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_intelligence.py:27:61: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_intelligence.py:46:71: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_intelligence.py:46:79: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_intelligence.py:47:37: UP017 [*] Use `datetime.UTC` alias
+tests/test_wallet_scoring.py:10:76: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_scoring.py:10:84: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_scoring.py:10:103: UP017 [*] Use `datetime.UTC` alias
+tests/test_wallet_scoring.py:28:76: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_scoring.py:28:84: FURB157 [*] Verbose expression in `Decimal` constructor
+tests/test_wallet_scoring.py:28:103: UP017 [*] Use `datetime.UTC` alias
+Found 236 errors.
+[*] 175 fixable with the `--fix` option (7 hidden fixes can be enabled with the `--unsafe-fixes` option).

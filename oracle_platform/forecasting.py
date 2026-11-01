@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Iterable
 
 from .domain import Forecast
 from .quantitative import bayesian_update, brier_score, log_loss
@@ -23,7 +23,7 @@ class BetaPrior:
     def mean(self) -> Decimal:
         return self.alpha / (self.alpha + self.beta)
 
-    def update(self, successes: int, failures: int) -> "BetaPrior":
+    def update(self, successes: int, failures: int) -> BetaPrior:
         if successes < 0 or failures < 0:
             raise ValueError("successes and failures cannot be negative")
         return BetaPrior(self.alpha + D(successes), self.beta + D(failures))

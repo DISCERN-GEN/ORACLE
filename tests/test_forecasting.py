@@ -2,7 +2,12 @@ from decimal import Decimal as D
 
 import pytest
 
-from oracle_platform.forecasting import BetaPrior, EvidenceItem, evaluate_forecasts, update_with_independent_evidence
+from oracle_platform.forecasting import (
+    BetaPrior,
+    EvidenceItem,
+    evaluate_forecasts,
+    update_with_independent_evidence,
+)
 
 
 def test_beta_prior_updates_with_resolved_observations():

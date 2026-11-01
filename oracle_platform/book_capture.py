@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
-from decimal import Decimal, InvalidOperation
+from datetime import UTC, datetime
+from decimal import Decimal
 from typing import Any
 
 PARSER_VERSION = "oracle-clob-capture-v1"
@@ -37,7 +37,7 @@ def _levels(raw: Any) -> list[dict[str, str]]:
 def normalize_market_message(message: dict[str, Any], received_at: datetime | None = None,
                              connection_id: str = "unknown") -> dict[str, Any]:
     """Validate and normalize a public CLOB market-channel message without inventing state."""
-    received = received_at or datetime.now(timezone.utc)
+    received = received_at or datetime.now(UTC)
     if received.tzinfo is None:
         raise ValueError("received_at must be timezone-aware")
     event_type = str(message.get("event_type") or "").strip()
@@ -50,7 +50,7 @@ def normalize_market_message(message: dict[str, Any], received_at: datetime | No
             "asset_id": str(message.get("asset_id")) if message.get("asset_id") is not None else None,
             "condition_id": str(message.get("market")) if message.get("market") else None,
             "event_type": event_type or "unknown", "venue_timestamp": None,
-            "received_at": received.astimezone(timezone.utc), "book_hash": None,
+            "received_at": received.astimezone(UTC), "book_hash": None,
             "bids": None, "asks": None, "raw_payload": message, "parse_valid": False,
             "invalidation_reason": f"unsupported market event type: {event_type or 'missing'}",
             "parser_version": PARSER_VERSION,
@@ -63,7 +63,7 @@ def normalize_market_message(message: dict[str, Any], received_at: datetime | No
     venue_time = None
     if venue_ms is not None:
         try:
-            venue_time = datetime.fromtimestamp(int(venue_ms) / 1000, tz=timezone.utc)
+            venue_time = datetime.fromtimestamp(int(venue_ms) / 1000, tz=UTC)
         except (ValueError, TypeError, OverflowError, OSError) as exc:
             raise ValueError("invalid venue millisecond timestamp") from exc
     bids = _levels(message.get("bids", [])) if event_type == "book" else None
@@ -76,7 +76,7 @@ def normalize_market_message(message: dict[str, Any], received_at: datetime | No
         "condition_id": str(message.get("market")) if message.get("market") else None,
         "event_type": event_type,
         "venue_timestamp": venue_time,
-        "received_at": received.astimezone(timezone.utc),
+        "received_at": received.astimezone(UTC),
         "book_hash": str(message.get("hash")) if message.get("hash") else None,
         "bids": bids,
         "asks": asks,

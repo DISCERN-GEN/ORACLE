@@ -4,7 +4,7 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
 from typing import Any, Protocol
 
@@ -136,7 +136,7 @@ async def discover_wallets(
             await store.set_checkpoint("wallet_discovery:leaderboard", {
                 "next_cursor": lb_cursor, "complete": lb_complete,
                 "pages_read_total": int(lb_state.get("pages_read_total", 0)) + lb_pages,
-                "last_page_rows": len(rows), "updated_at": datetime.now(timezone.utc).isoformat(),
+                "last_page_rows": len(rows), "updated_at": datetime.now(UTC).isoformat(),
             })
             if lb_complete:
                 break
@@ -163,7 +163,7 @@ async def discover_wallets(
             "page_is_last": page_is_last,
             "complete": market_complete if complete is None else complete,
             "active_markets_seen": historical_markets_seen + markets_seen,
-            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(UTC).isoformat(),
         })
 
     market_pages_budget = max_market_pages
@@ -269,7 +269,7 @@ def normalize_public_trade(row: dict[str, Any], fallback_wallet: str | None = No
         timestamp = int(row.get("timestamp"))
         if not Decimal("0") <= price <= Decimal("1") or quantity <= 0 or timestamp <= 0:
             return None
-        executed_at = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+        executed_at = datetime.fromtimestamp(timestamp, tz=UTC)
     except (InvalidOperation, TypeError, ValueError, OSError, OverflowError):
         return None
     fee_raw = row.get("fee")
@@ -355,7 +355,7 @@ async def ingest_wallet_trade_history(
                     "pages_read_total": int(state.get("pages_read_total", 0)) + wallet_pages,
                     "trades_inserted_total": int(state.get("trades_inserted_total", 0)) + per_wallet_trades_inserted,
                     "last_page_rows": len(rows),
-                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(UTC).isoformat(),
                     "history_window": "full_history_start_1",
                     "maker_rows_included": True,
                 })
@@ -371,7 +371,7 @@ async def ingest_wallet_trade_history(
                 "next_cursor": cursor, "complete": False,
                 "pages_read_total": int(state.get("pages_read_total", 0)) + wallet_pages,
                 "last_error": f"{type(exc).__name__}: {str(exc)[:160]}",
-                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(UTC).isoformat(),
             })
     remaining = await store.list_wallets_for_trade_ingestion(1)
     return {
@@ -423,7 +423,7 @@ def normalize_public_activity(
         timestamp = int(timestamp_raw)
         if timestamp <= 0:
             return None
-        occurred_at = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+        occurred_at = datetime.fromtimestamp(timestamp, tz=UTC)
     except (TypeError, ValueError, OSError, OverflowError):
         return None
 
@@ -539,7 +539,7 @@ async def ingest_wallet_activity_history(
                         "next_cursor": cursor, "complete": done,
                         "pages_read_total": int(state.get("pages_read_total", 0)) + wallet_pages,
                         "events_inserted_total": int(state.get("events_inserted_total", 0)) + inserted,
-                        "last_page_rows": len(rows), "updated_at": datetime.now(timezone.utc).isoformat(),
+                        "last_page_rows": len(rows), "updated_at": datetime.now(UTC).isoformat(),
                         "history_window": "full_history_start_1" if feed in {"activity", "activity_tips"} else "combo_feed_full_available_history",
                         "sort_direction": "DESC" if feed in {"activity", "activity_tips"} else None,
                         "deposits_withdrawals_included": feed in {"activity", "activity_tips"},
@@ -564,7 +564,7 @@ async def ingest_wallet_activity_history(
                     "next_cursor": cursor, "complete": False,
                     "pages_read_total": int(state.get("pages_read_total", 0)) + wallet_pages,
                     "last_error": f"{type(exc).__name__}: {str(exc)[:160]}",
-                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(UTC).isoformat(),
                 })
         by_feed[feed] = feed_stats
     return {

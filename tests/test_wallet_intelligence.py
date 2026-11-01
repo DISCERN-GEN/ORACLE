@@ -1,4 +1,4 @@
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal as D
 
 from oracle_platform.domain import Side
@@ -7,7 +7,7 @@ from oracle_platform.wallet_intelligence import WalletTrade, reconstruct_wallet
 
 def _trade(trade_id, side, price, quantity, fee="0"):
     return WalletTrade(trade_id, "0xabc", "m1", "token1", side, D(price), D(quantity), D(fee),
-                       datetime(2026, 1, 1, tzinfo=timezone.utc) + timedelta(minutes=int(trade_id[-1])))
+                       datetime(2026, 1, 1, tzinfo=UTC) + timedelta(minutes=int(trade_id[-1])))
 
 
 def test_wallet_average_cost_reconstruction_and_pnl():
@@ -44,7 +44,7 @@ def test_missing_open_position_mark_does_not_become_zero_unrealised_pnl():
 def test_unknown_public_trade_fees_withhold_net_pnl_and_skill_metrics():
     trade = WalletTrade(
         "unknown-fee", "0xabc", "m1", "token1", Side.BUY, D("0.4"), D("5"), D("0"),
-        datetime(2026, 1, 1, tzinfo=timezone.utc), fee_known=False,
+        datetime(2026, 1, 1, tzinfo=UTC), fee_known=False,
     )
     result = reconstruct_wallet([trade], {"token1": D("0.6")},
                                 history_complete=True, initial_balances_known=True)

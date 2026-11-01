@@ -1,0 +1,15 @@
+oracle_platform/agent.py:52:32: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/agent.py:65:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/api.py:218:12: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/portfolio.py:67:9: B007 Loop control variable `iteration` not used within loop body
+oracle_platform/quantitative.py:118:9: B007 Loop control variable `key` not used within loop body
+oracle_platform/wallet_discovery.py:143:16: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:196:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:234:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:367:16: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_discovery.py:559:20: BLE001 Do not catch blind exception: `Exception`
+oracle_platform/wallet_intelligence.py:184:5: F841 Local variable `losses` is assigned to but never used
+scripts/capture-orderbooks.py:99:36: BLE001 Do not catch blind exception: `Exception`
+scripts/capture-orderbooks.py:107:20: BLE001 Do not catch blind exception: `Exception`
+Found 13 errors.
+No fixes available (2 hidden fixes can be enabled with the `--unsafe-fixes` option).

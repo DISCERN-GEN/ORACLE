@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal as D
 
 from oracle_platform.domain import BookLevel, Forecast, OrderBook, OrderIntent, PaperAccount, Side
@@ -7,7 +7,7 @@ from oracle_platform.sessions import PaperSession, SessionState
 
 
 def _fixtures(age_seconds: int = 0):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     book = OrderBook("m1", "yes-token", (BookLevel(D("0.49"), D("20")),),
                      (BookLevel(D("0.50"), D("20")),), now - timedelta(seconds=age_seconds))
     forecast = Forecast("m1", "YES", D("0.60"), D("0.55"), D("0.65"), D("0.8"), "test", "0.1")
@@ -37,7 +37,7 @@ def test_risk_rejects_stale_orderbook():
 
 
 def test_12_hour_session_transitions_to_completed():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     session = PaperSession.start(12, now)
     assert session.state == SessionState.RUNNING
     assert session.refresh(now + timedelta(hours=11, minutes=59)) == SessionState.RUNNING

@@ -1,0 +1,56 @@
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: oracle
+          POSTGRES_PASSWORD: oracle
+          POSTGRES_DB: oracle
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U oracle" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: oracle
+      PGPASSWORD: oracle
+      PGDATABASE: oracle
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e '.[test]'
+      - name: Ruff
+        run: ruff check .
+      - name: Migrations apply twice (idempotency) and schema is unchanged
+        run: |
+          set -euo pipefail
+          apply() { for f in sql/00*.sql; do psql -v ON_ERROR_STOP=1 -q -f "$f" >/dev/null; done; }
+          dump() { pg_dump -s | grep -v '^\\\(un\)\?restrict' | md5sum; }
+          apply; first=$(dump); apply; second=$(dump)
+          test "$first" = "$second"
+          psql -Atc "select count(*) from schema_migrations" | grep -qx 6
+      - name: Validity and health SQL behaviour
+        run: psql -v ON_ERROR_STOP=1 -q -f tests/sql/validity_behaviour.sql
+      - name: Tests (asyncio mode is verified, not assumed)
+        run: pytest -q -W error::pytest.PytestConfigWarning
+  frontend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      # Requires web/package-lock.json to be generated and committed (not yet present).
+      - run: npm ci
+      - run: npm run build
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f infra/Dockerfile.api -t oracle-api .

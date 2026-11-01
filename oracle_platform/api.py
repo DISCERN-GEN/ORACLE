@@ -3,9 +3,9 @@ from __future__ import annotations
 import asyncio
 import re
 import secrets
-from pathlib import Path
 from contextlib import asynccontextmanager
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, Security
@@ -15,20 +15,23 @@ from pydantic import BaseModel, Field
 
 from .agent import OracleResearchAgent
 from .domain import Forecast, OrderIntent, PaperAccount, Side
-from .event_intelligence import InformationSource, RSSIngestor, RELIABILITY_TIERS
+from .event_intelligence import RELIABILITY_TIERS, InformationSource, RSSIngestor
 from .forecasting import BetaPrior, EvidenceItem, create_forecast
 from .opportunity import OutcomeLeg, evaluate_complete_set, evaluate_directional
-from .portfolio import mean_variance_kelly_approx
 from .paper_broker import PaperBroker
 from .polymarket import PolymarketClient
+from .portfolio import mean_variance_kelly_approx
 from .risk import RiskEngine
 from .sessions import PaperSession, SessionState
 from .settings import settings
 from .store import Store
-from .wallet_discovery import discover_wallets, ingest_wallet_activity_history, ingest_wallet_trade_history
+from .wallet_discovery import (
+    discover_wallets,
+    ingest_wallet_activity_history,
+    ingest_wallet_trade_history,
+)
 from .wallet_intelligence import WalletTrade, reconstruct_wallet
 from .wallet_scoring import score_wallet
-
 
 bearer = HTTPBearer(auto_error=False)
 store = Store(settings.database_url)
@@ -67,6 +70,9 @@ async def lifespan(_: FastAPI):
     validity_migration_path = Path(__file__).resolve().parent.parent / "sql" / "005_capture_validity.sql"
     await store.apply_migration_file(validity_migration_path)
     await store.require_schema("005_capture_validity")
+    health_migration_path = Path(__file__).resolve().parent.parent / "sql" / "006_capture_health.sql"
+    await store.apply_migration_file(health_migration_path)
+    await store.require_schema("006_capture_health")
     await store.fail_interrupted_sessions()
     yield
     await store.close()

@@ -6,12 +6,11 @@ import ipaddress
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from urllib.parse import urlparse
 
 import httpx
-
 
 RELIABILITY_TIERS = {
     "official_primary": 1.00,
@@ -87,7 +86,7 @@ class RSSIngestor:
                 if size > self.max_bytes:
                     raise ValueError(f"Feed exceeds {self.max_bytes} byte limit")
                 chunks.append(chunk)
-        return parse_feed(b"".join(chunks), source, datetime.now(timezone.utc))
+        return parse_feed(b"".join(chunks), source, datetime.now(UTC))
 
 
 def parse_feed(xml_payload: bytes, source: InformationSource,
@@ -97,7 +96,7 @@ def parse_feed(xml_payload: bytes, source: InformationSource,
     upper_payload = xml_payload[:4096].upper()
     if b"<!DOCTYPE" in upper_payload or b"<!ENTITY" in upper_payload:
         raise ValueError("DTD/entity declarations are not accepted in RSS feeds")
-    observed_at = observed_at or datetime.now(timezone.utc)
+    observed_at = observed_at or datetime.now(UTC)
     try:
         root = ET.fromstring(xml_payload)
     except ET.ParseError as exc:
@@ -186,5 +185,5 @@ def _parse_published(value: str) -> datetime | None:
         except (TypeError, ValueError, OverflowError):
             return None
     if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
-    return parsed.astimezone(timezone.utc)
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)

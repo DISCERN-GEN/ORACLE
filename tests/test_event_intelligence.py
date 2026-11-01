@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -11,7 +11,7 @@ def test_rss_parse_preserves_source_provenance_and_hash():
     <title>Official Notice</title><link>https://example.gov/notice</link>
     <description>Primary source &amp; details</description><pubDate>Sun, 01 Nov 2026 10:00:00 GMT</pubDate>
     </item></channel></rss>'''
-    docs = parse_feed(xml, source, datetime(2026, 11, 1, 10, 1, tzinfo=timezone.utc))
+    docs = parse_feed(xml, source, datetime(2026, 11, 1, 10, 1, tzinfo=UTC))
     assert len(docs) == 1
     assert docs[0].title == "Official Notice"
     assert docs[0].summary == "Primary source & details"

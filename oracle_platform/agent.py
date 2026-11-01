@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from .polymarket import PolymarketClient
@@ -53,7 +53,7 @@ class OracleResearchAgent:
                             session.errors += 1
                             self.last_error = f"OrderBook {market.get('id')}: {type(book_exc).__name__}: {book_exc}"
                 session.observations += len(markets) + book_count
-                session.heartbeat_at = datetime.now(timezone.utc)
+                session.heartbeat_at = datetime.now(UTC)
                 self.last_market_count = len(markets)
                 self.last_cycle_at = session.heartbeat_at
                 self.last_error = None
@@ -73,7 +73,7 @@ class OracleResearchAgent:
                 await self.store.update_session(session)
             if session.state != SessionState.RUNNING:
                 break
-            remaining = max(0.0, (session.ends_at - datetime.now(timezone.utc)).total_seconds())
+            remaining = max(0.0, (session.ends_at - datetime.now(UTC)).total_seconds())
             if remaining > 0:
                 await asyncio.sleep(min(self.poll_seconds, remaining))
 

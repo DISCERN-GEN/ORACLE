@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
-from typing import Iterable
 
-from .domain import BookLevel, OrderBook, Side
+from .domain import OrderBook, Side
 from .quantitative import _price, _probability
 
 D = Decimal
@@ -84,7 +84,7 @@ def evaluate_directional(
         raise ValueError("quantity must be positive and fee_rate non-negative")
     if max_book_age_seconds < 0:
         raise ValueError("max_book_age_seconds cannot be negative")
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     if book.age_seconds(now) > max_book_age_seconds:
         return _empty_directional(book, side, outcome_probability, quantity, "STALE_ORDER_BOOK")
     if book.best_bid is None or book.best_ask is None:
@@ -163,7 +163,7 @@ def evaluate_complete_set(
         return _empty_complete_set(market_id, outcomes, quantity, "OUTCOMES_NOT_VERIFIED_EXHAUSTIVE")
     if not settlement_rules_verified:
         return _empty_complete_set(market_id, outcomes, quantity, "SETTLEMENT_RULES_NOT_VERIFIED")
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     evaluations: list[DirectionalEvaluation] = []
     for leg in leg_list:
         if leg.book.market_id != market_id:

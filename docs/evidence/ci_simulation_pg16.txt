@@ -1,0 +1,7 @@
+first=1aab416aa778d9bd18739e6eb9358faa  -
+second=1aab416aa778d9bd18739e6eb9358faa  -
+SCHEMA STABLE ACROSS RUNS
+migrations recorded: 6
+validity_behaviour: OK
+negative control (must fail):
+ERROR:  valid before gap

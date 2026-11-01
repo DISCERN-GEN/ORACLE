@@ -1,12 +1,16 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from oracle_platform.book_capture import decode_market_frame, is_copy_scorable, normalize_market_message
+from oracle_platform.book_capture import (
+    decode_market_frame,
+    is_copy_scorable,
+    normalize_market_message,
+)
 
 
 def test_normalizes_full_book_and_preserves_raw_payload():
-    now = datetime(2026, 11, 1, tzinfo=timezone.utc)
+    now = datetime(2026, 11, 1, tzinfo=UTC)
     raw = {"event_type": "book", "asset_id": "token-1", "market": "condition-1",
            "timestamp": str(int(now.timestamp() * 1000)), "hash": "abc",
            "bids": [{"price": "0.4", "size": "12"}],
@@ -31,7 +35,7 @@ def test_rejects_bad_levels_for_caller_to_record_as_parse_error():
 
 
 def test_copy_scorability_requires_exact_token_and_fresh_book():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     book = {"asset_id": "token-1", "condition_id": "mkt-1", "venue_timestamp": now,
             "bids": [{"price": "0.4", "size": "5"}], "asks": [{"price": "0.5", "size": "5"}],
             "state_valid": True}

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Sequence
 
 D = Decimal
 
@@ -64,7 +64,7 @@ def mean_variance_kelly_approx(
     fractions = [D("0") for _ in range(n)]
     converged = False
     iteration = 0
-    for iteration in range(1, max_iterations + 1):
+    for iteration in range(1, max_iterations + 1):  # noqa: B007 - read after the loop
         gradient = [mu[i] - sum((sigma[i][j] * fractions[j] for j in range(n)), D("0"))
                     for i in range(n)]
         candidate = _project_capped_simplex(

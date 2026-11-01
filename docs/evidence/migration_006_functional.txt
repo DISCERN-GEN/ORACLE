@@ -1,0 +1,27 @@
+0
+ clob_set_connection_state 
+ 
+(1 row)
+ clob_mark_assets_invalid 
+                        2
+(1 row)
+ clob_set_connection_state 
+ 
+(1 row)
+   state    
+ recovering
+(1 row)
+ clob_mark_asset_valid 
+ t
+(1 row)
+ clob_refresh_connection_health 
+ recovering
+(1 row)
+ clob_mark_asset_valid 
+ t
+(1 row)
+ after_all_valid 
+ healthy
+(1 row)
+ERROR:  healthy is derived, not set directly
+CONTEXT:  PL/pgSQL function clob_set_connection_state(text,timestamp with time zone,bigint,text) line 4 at RAISE

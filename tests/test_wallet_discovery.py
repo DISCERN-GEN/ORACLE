@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import UTC
 
 from oracle_platform.wallet_discovery import (
     discover_wallets,
+    ingest_wallet_activity_history,
     ingest_wallet_trade_history,
     normalize_public_activity,
     normalize_public_trade,
-    ingest_wallet_activity_history,
 )
 
 W1 = "0x" + "1" * 40
@@ -125,7 +125,7 @@ def test_normalize_public_v2_trade_keeps_fee_unknown_and_fingerprint():
     assert trade["fee_known"] is False
     assert trade["trade_id"].startswith("pmv2:")
     assert normalize_public_trade(row)["trade_id"] == trade["trade_id"]
-    assert trade["executed_at"].tzinfo == timezone.utc
+    assert trade["executed_at"].tzinfo == UTC
 
 
 def test_normalize_public_trade_rejects_incomplete_identity_and_bad_price():

@@ -3,8 +3,12 @@ from decimal import Decimal as D
 import pytest
 
 from oracle_platform.quantitative import (
-    bayesian_update, brier_score, expected_value_yes, fractional_kelly_size,
-    log_loss, weighted_wallet_score,
+    bayesian_update,
+    brier_score,
+    expected_value_yes,
+    fractional_kelly_size,
+    log_loss,
+    weighted_wallet_score,
 )
 
 

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal as D
 
 from oracle_platform.domain import BookLevel, OrderBook, OrderIntent, PaperAccount, Side
@@ -6,7 +6,7 @@ from oracle_platform.paper_broker import PaperBroker
 
 
 def test_buy_fills_only_visible_asks_at_or_below_limit():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     book = OrderBook("m1", "yes-token",
                      bids=(BookLevel(D("0.49"), D("20")),),
                      asks=(BookLevel(D("0.50"), D("3")), BookLevel(D("0.52"), D("10"))),
@@ -24,7 +24,7 @@ def test_buy_fills_only_visible_asks_at_or_below_limit():
 
 
 def test_unverified_fee_schedule_cannot_fill():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     book = OrderBook("m1", "yes-token", (), (BookLevel(D("0.5"), D("10")),), now)
     account = PaperAccount.create(D("100"))
     intent = OrderIntent("m1", "yes-token", Side.BUY, D("0.5"), D("2"), "idempotency-12346")
@@ -35,7 +35,7 @@ def test_unverified_fee_schedule_cannot_fill():
 
 
 def test_no_crossing_depth_remains_unfilled():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     book = OrderBook("m1", "yes-token", (), (BookLevel(D("0.6"), D("10")),), now)
     account = PaperAccount.create(D("100"))
     intent = OrderIntent("m1", "yes-token", Side.BUY, D("0.5"), D("2"), "idempotency-12347")
@@ -45,7 +45,7 @@ def test_no_crossing_depth_remains_unfilled():
 
 
 def test_sell_releases_original_cost_basis_from_market_exposure():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     buy_book = OrderBook("m1", "yes-token", (), (BookLevel(D("0.50"), D("10")),), now)
     account = PaperAccount.create(D("100"))
     buy = OrderIntent("m1", "yes-token", Side.BUY, D("0.50"), D("3"), "buy-1234567890")
@@ -63,7 +63,7 @@ def test_sell_releases_original_cost_basis_from_market_exposure():
 
 
 def test_broker_rejects_below_minimum_or_invalid_tick():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     book = OrderBook("m1", "yes-token", (), (BookLevel(D("0.5"), D("10")),), now,
                      tick_size=D("0.05"), min_order_size=D("2"))
     account = PaperAccount.create(D("100"))

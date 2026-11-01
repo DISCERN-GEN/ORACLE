@@ -34,7 +34,8 @@ class Collector:
                  connect: Callable[[], Any],
                  clock: Callable[[], datetime] = utcnow,
                  mono: Callable[[], int] = monotonic_ns,
-                 backoff_cap: float = 60.0, recv_timeout: float = 1.0) -> None:
+                 backoff_cap: float = 60.0, recv_timeout: float = 1.0,
+                 stable_after_ns: int = 60_000_000_000) -> None:
         self.store = store
         self.assets = list(dict.fromkeys(assets))
         self.connect = connect
@@ -42,6 +43,9 @@ class Collector:
         self.mono = mono
         self.backoff_cap = backoff_cap
         self.recv_timeout = recv_timeout
+        self.stable_after_ns = stable_after_ns
+        self.delays: list[float] = []
+        self.gap_id: int | None = None
         self.last_frame_at: datetime | None = None
         self.gap_start: datetime | None = None
         self.gap_reason = ""
@@ -51,27 +55,44 @@ class Collector:
         self.stop = asyncio.Event()
 
     # ---- gap bookkeeping -------------------------------------------------
-    async def _open_gap(self, since: datetime, reason: str, kind: str, connection_id: str) -> None:
-        """Start (or keep) a gap and invalidate every asset from the last persisted frame."""
+    async def _open_gap(self, since: datetime, reason: str, kind: str, connection_id: str,
+                        adopted: dict | None = None) -> None:
+        """Persist the gap as OPEN first, then invalidate assets from the last persisted frame."""
         if self.gap_start is None:
             self.gap_start, self.gap_reason = since, reason
             self.gap_kind, self.gap_connection_id = kind, connection_id
+            try:
+                if adopted:
+                    self.gap_id = adopted["gap_id"]
+                else:
+                    self.gap_id = await self.store.open_clob_capture_gap(
+                        connection_id, since, reason, self.assets, max(self.failures, 1), kind,
+                        self.last_frame_at)
+            except Exception:  # DB may be the failure; the gap is re-derived from last frame on restart
+                self.gap_id = None
         try:
-            await self.store.mark_clob_assets_invalid(self.assets, self.gap_start, self.gap_kind)
-        except Exception:  # DB may be the very thing that failed; closed again on recovery
+            await self.store.mark_clob_assets_invalid(
+                self.assets, self.gap_start, self.gap_kind, self.gap_id)
+            await self.store.set_clob_connection_state(
+                "interrupted", self.gap_start, self.gap_id, self.gap_reason[:200])
+        except Exception:
             pass
 
     async def _close_gap(self, ended_at: datetime, recovered: bool) -> None:
+        """Close the gap. A reconnect is only 'recovering': assets stay invalid until a fresh book."""
         if self.gap_start is None:
             return
         reason = self.gap_reason if recovered else "collector_stopped_during_gap:" + self.gap_reason
-        gap_id = await self.store.record_clob_capture_gap(
-            self.gap_connection_id or "unknown", self.gap_start, ended_at, reason, self.assets,
-            max(self.failures, 1), recovered_at=ended_at if recovered else None,
-            gap_kind=self.gap_kind, last_frame_at=self.last_frame_at,
-        )
-        await self.store.mark_clob_assets_invalid(self.assets, self.gap_start, self.gap_kind, gap_id)
-        self.gap_start = None
+        if self.gap_id is None:  # the open write failed earlier (DB down): write it complete now
+            self.gap_id = await self.store.open_clob_capture_gap(
+                self.gap_connection_id or "unknown", self.gap_start, reason, self.assets,
+                max(self.failures, 1), self.gap_kind, self.last_frame_at)
+        await self.store.close_clob_capture_gap(
+            self.gap_id, ended_at, reason, ended_at if recovered else None)
+        await self.store.mark_clob_assets_invalid(self.assets, self.gap_start, self.gap_kind, self.gap_id)
+        if recovered:
+            await self.store.set_clob_connection_state("recovering", ended_at, self.gap_id, reason[:200])
+        self.gap_start, self.gap_id = None, None
 
     # ---- frame handling ---------------------------------------------------
     async def handle_frame(self, raw: str | bytes, connection_id: str) -> None:
@@ -96,6 +117,9 @@ class Collector:
         if not messages:
             await self.store.finalize_clob_raw_frame(raw_id, None, "json_frame_without_event_objects")
             return
+        is_array = isinstance(decoded, list)
+        if is_array:
+            await self.store.finalize_clob_array_parent(raw_id, len(messages))
         for index, message in enumerate(messages):
             event, parse_error = None, None
             try:
@@ -103,8 +127,12 @@ class Collector:
                 event["received_monotonic_ns"] = mono
             except Exception as exc:  # keep raw evidence, invalidate the asset, continue
                 parse_error = f"normalization_error:{type(exc).__name__}:{exc}"
-            target = raw_id if index == 0 else await self.store.save_clob_raw_frame(
-                message, connection_id, received, mono, "json_array_item")
+            if is_array:  # child row references the parent frame; payload is not copied
+                target = await self.store.save_clob_raw_frame(
+                    {"$ref_message_id": raw_id, "index": index}, connection_id, received, mono,
+                    "json_array_item", parent_message_id=raw_id, item_index=index)
+            else:
+                target = raw_id
             await self.store.finalize_clob_raw_frame(target, event, parse_error)
             if parse_error is not None:
                 asset = message.get("asset_id")
@@ -123,15 +151,18 @@ class Collector:
         last = await self.store.last_clob_frame_time()
         if last is not None:
             self.last_frame_at = last
-        await self._open_gap(last or startup, "process_start", "process_restart", "startup")
+        orphan = await self.store.adopt_open_clob_gap()
+        since = min([t for t in (last, orphan["started_at"] if orphan else None) if t] or [startup])
+        await self._open_gap(since, "process_start", "process_restart", "startup", adopted=orphan)
         while not self.stop.is_set():
             connection_id = str(uuid.uuid4())
+            connected_mono: int | None = None
             try:
                 async with self.connect() as ws:
                     await ws.send(json.dumps({"type": "market", "assets_ids": self.assets,
                                               "custom_feature_enabled": True}))
                     await self._close_gap(self.clock(), recovered=True)
-                    self.failures = 0
+                    connected_mono = self.mono()
                     while not self.stop.is_set():
                         try:
                             raw = await asyncio.wait_for(ws.recv(), timeout=self.recv_timeout)
@@ -143,13 +174,17 @@ class Collector:
             except Exception as exc:
                 if self.stop.is_set():
                     break
+                if connected_mono is not None and self.mono() - connected_mono >= self.stable_after_ns:
+                    self.failures = 0  # only a meaningfully stable connection resets backoff
+                connected_mono = None
                 self.failures += 1
                 await self._open_gap(self.last_frame_at or self.clock(),
                                      f"{type(exc).__name__}:{exc}"[:500], "connection_loss",
                                      connection_id)
+                delay = backoff_delay(self.failures, self.backoff_cap)
+                self.delays.append(delay)
                 try:
-                    await asyncio.wait_for(self.stop.wait(),
-                                           timeout=backoff_delay(self.failures, self.backoff_cap))
+                    await asyncio.wait_for(self.stop.wait(), timeout=delay)
                 except TimeoutError:
                     pass
         if self.gap_start is not None:

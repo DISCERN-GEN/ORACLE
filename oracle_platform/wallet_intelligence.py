@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from collections.abc import Iterable
+from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from typing import Iterable
 
 from .domain import Side
 
@@ -181,7 +181,6 @@ def reconstruct_wallet(
     unrealised_pnl = unrealised if all_open_positions_marked and fees_complete else None
     total_pnl = realised_pnl + unrealised_pnl if realised_pnl is not None and unrealised_pnl is not None else None
     wins = sum(1 for x in realised if x.realised_pnl > 0)
-    losses = sum(1 for x in realised if x.realised_pnl < 0)
     win_rate = D(wins) / D(len(realised)) if realised and fees_complete else None
     gross_wins = sum((x.realised_pnl for x in realised if x.realised_pnl > 0), D("0"))
     gross_losses = -sum((x.realised_pnl for x in realised if x.realised_pnl < 0), D("0"))

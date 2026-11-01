@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from enum import StrEnum
 from typing import Any
@@ -49,7 +49,7 @@ class OrderBook:
         return (self.best_bid + self.best_ask) / Decimal("2")
 
     def age_seconds(self, now: datetime | None = None) -> Decimal:
-        now = now or datetime.now(timezone.utc)
+        now = now or datetime.now(UTC)
         return Decimal(str(max(0.0, (now - self.captured_at).total_seconds())))
 
 
@@ -100,7 +100,7 @@ class RiskDecision:
     checks_passed: tuple[str, ...] = ()
     checks_failed: tuple[str, ...] = ()
     rationale: str = ""
-    decided_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    decided_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 @dataclass(slots=True)
@@ -117,7 +117,7 @@ class PaperAccount:
     daily_loss: Decimal = Decimal("0")
 
     @classmethod
-    def create(cls, bankroll: Decimal) -> "PaperAccount":
+    def create(cls, bankroll: Decimal) -> PaperAccount:
         if bankroll <= 0:
             raise ValueError("Paper bankroll must be positive")
         return cls(initial_cash=bankroll, cash=bankroll)

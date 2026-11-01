@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal as D
 
 from oracle_platform.domain import BookLevel, OrderBook, Side
@@ -9,7 +9,7 @@ def _book(token, bids, asks):
     return OrderBook("market-1", token,
                      tuple(BookLevel(D(p), D(q)) for p, q in bids),
                      tuple(BookLevel(D(p), D(q)) for p, q in asks),
-                     datetime.now(timezone.utc))
+                     datetime.now(UTC))
 
 
 def test_directional_buy_uses_ask_vwap_and_fees():

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from .domain import Decision, Forecast, OrderBook, OrderIntent, PaperAccount, RiskDecision
@@ -33,7 +33,7 @@ class RiskEngine:
         net_expected_value: Decimal,
         now: datetime | None = None,
     ) -> RiskDecision:
-        now = now or datetime.now(timezone.utc)
+        now = now or datetime.now(UTC)
         passed: list[str] = []
         failed: list[str] = []
         exposure_increment = intent.notional if intent.side.value == "BUY" else Decimal("0")
