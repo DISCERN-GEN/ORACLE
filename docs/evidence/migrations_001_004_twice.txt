@@ -1,0 +1,115 @@
+=== run 1 ===
+-- sql/001_initial.sql
+psql:sql/001_initial.sql:300: NOTICE:  trigger "trg_audit_append_only" for relation "audit_events" does not exist, skipping
+exit=0
+-- sql/002_wallet_intelligence.sql
+exit=0
+-- sql/003_wallet_activity.sql
+exit=0
+-- sql/004_orderbook_capture.sql
+psql:sql/004_orderbook_capture.sql:60: NOTICE:  column "invalidation_reason" of relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:68: NOTICE:  column "received_monotonic_ns" of relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:72: NOTICE:  column "received_monotonic_ns" of relation "clob_book_snapshots" already exists, skipping
+exit=0
+tables: 33 indexes: 76
+56d78ae195ab73246381eefe803ac2cf  -
+=== run 2 ===
+-- sql/001_initial.sql
+psql:sql/001_initial.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+psql:sql/001_initial.sql:20: NOTICE:  relation "wallets" already exists, skipping
+psql:sql/001_initial.sql:21: NOTICE:  relation "idx_wallets_activity" already exists, skipping
+psql:sql/001_initial.sql:22: NOTICE:  relation "idx_wallets_last_seen" already exists, skipping
+psql:sql/001_initial.sql:39: NOTICE:  relation "wallet_trades" already exists, skipping
+psql:sql/001_initial.sql:40: NOTICE:  relation "idx_wallet_trades_wallet_time" already exists, skipping
+psql:sql/001_initial.sql:41: NOTICE:  relation "idx_wallet_trades_market_time" already exists, skipping
+psql:sql/001_initial.sql:55: NOTICE:  relation "wallet_positions" already exists, skipping
+psql:sql/001_initial.sql:56: NOTICE:  relation "idx_wallet_positions_wallet" already exists, skipping
+psql:sql/001_initial.sql:76: NOTICE:  relation "wallet_scores" already exists, skipping
+psql:sql/001_initial.sql:77: NOTICE:  relation "idx_wallet_scores_wallet" already exists, skipping
+psql:sql/001_initial.sql:78: NOTICE:  relation "idx_wallet_scores_overall" already exists, skipping
+psql:sql/001_initial.sql:98: NOTICE:  relation "markets" already exists, skipping
+psql:sql/001_initial.sql:99: NOTICE:  relation "idx_markets_status" already exists, skipping
+psql:sql/001_initial.sql:100: NOTICE:  relation "idx_markets_close" already exists, skipping
+psql:sql/001_initial.sql:101: NOTICE:  relation "idx_markets_category" already exists, skipping
+psql:sql/001_initial.sql:117: NOTICE:  relation "orderbook_snapshots" already exists, skipping
+psql:sql/001_initial.sql:118: NOTICE:  relation "idx_orderbook_market_time" already exists, skipping
+psql:sql/001_initial.sql:137: NOTICE:  relation "forecasts" already exists, skipping
+psql:sql/001_initial.sql:138: NOTICE:  relation "idx_forecasts_market_time" already exists, skipping
+psql:sql/001_initial.sql:139: NOTICE:  relation "idx_forecasts_model" already exists, skipping
+psql:sql/001_initial.sql:159: NOTICE:  relation "opportunities" already exists, skipping
+psql:sql/001_initial.sql:160: NOTICE:  relation "idx_opportunities_market_time" already exists, skipping
+psql:sql/001_initial.sql:161: NOTICE:  relation "idx_opportunities_status" already exists, skipping
+psql:sql/001_initial.sql:176: NOTICE:  relation "risk_decisions" already exists, skipping
+psql:sql/001_initial.sql:199: NOTICE:  relation "orders" already exists, skipping
+psql:sql/001_initial.sql:200: NOTICE:  relation "idx_orders_state" already exists, skipping
+psql:sql/001_initial.sql:201: NOTICE:  relation "idx_orders_market_time" already exists, skipping
+psql:sql/001_initial.sql:212: NOTICE:  relation "fills" already exists, skipping
+psql:sql/001_initial.sql:213: NOTICE:  relation "idx_fills_order" already exists, skipping
+psql:sql/001_initial.sql:229: NOTICE:  relation "source_documents" already exists, skipping
+psql:sql/001_initial.sql:242: NOTICE:  relation "events" already exists, skipping
+psql:sql/001_initial.sql:252: NOTICE:  relation "claims" already exists, skipping
+psql:sql/001_initial.sql:262: NOTICE:  relation "market_event_links" already exists, skipping
+psql:sql/001_initial.sql:277: NOTICE:  relation "agent_memory" already exists, skipping
+psql:sql/001_initial.sql:278: NOTICE:  relation "idx_agent_memory_type" already exists, skipping
+psql:sql/001_initial.sql:279: NOTICE:  relation "idx_agent_memory_entity" already exists, skipping
+psql:sql/001_initial.sql:291: NOTICE:  relation "audit_events" already exists, skipping
+psql:sql/001_initial.sql:292: NOTICE:  relation "idx_audit_created" already exists, skipping
+psql:sql/001_initial.sql:293: NOTICE:  relation "idx_audit_entity" already exists, skipping
+psql:sql/001_initial.sql:314: NOTICE:  relation "model_versions" already exists, skipping
+psql:sql/001_initial.sql:327: NOTICE:  relation "model_evaluations" already exists, skipping
+psql:sql/001_initial.sql:339: NOTICE:  relation "portfolio_snapshots" already exists, skipping
+psql:sql/001_initial.sql:350: NOTICE:  relation "settlements" already exists, skipping
+psql:sql/001_initial.sql:364: NOTICE:  relation "paper_sessions" already exists, skipping
+psql:sql/001_initial.sql:365: NOTICE:  relation "idx_paper_sessions_state" already exists, skipping
+psql:sql/001_initial.sql:372: NOTICE:  relation "paper_account_snapshots" already exists, skipping
+psql:sql/001_initial.sql:373: NOTICE:  relation "idx_paper_account_session" already exists, skipping
+psql:sql/001_initial.sql:388: NOTICE:  relation "paper_orders" already exists, skipping
+psql:sql/001_initial.sql:397: NOTICE:  relation "paper_fills" already exists, skipping
+psql:sql/001_initial.sql:402: NOTICE:  relation "schema_migrations" already exists, skipping
+exit=0
+-- sql/002_wallet_intelligence.sql
+psql:sql/002_wallet_intelligence.sql:5: NOTICE:  column "fee_known" of relation "wallet_trades" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:7: NOTICE:  column "raw_data" of relation "wallet_trades" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:10: NOTICE:  column "evidence_status" of relation "wallet_scores" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:12: NOTICE:  column "observed_weight" of relation "wallet_scores" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:14: NOTICE:  column "warnings" of relation "wallet_scores" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:24: NOTICE:  relation "wallet_discovery_sources" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:26: NOTICE:  relation "idx_wallet_discovery_sources_source" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:32: NOTICE:  relation "ingestion_checkpoints" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:41: NOTICE:  relation "wallet_ingestion_runs" already exists, skipping
+psql:sql/002_wallet_intelligence.sql:43: NOTICE:  relation "idx_wallet_trades_fee_known" already exists, skipping
+exit=0
+-- sql/003_wallet_activity.sql
+psql:sql/003_wallet_activity.sql:24: NOTICE:  relation "wallet_activity" already exists, skipping
+psql:sql/003_wallet_activity.sql:27: NOTICE:  relation "idx_wallet_activity_wallet_time" already exists, skipping
+psql:sql/003_wallet_activity.sql:29: NOTICE:  relation "idx_wallet_activity_type_time" already exists, skipping
+psql:sql/003_wallet_activity.sql:31: NOTICE:  relation "idx_wallet_activity_tx_hash" already exists, skipping
+exit=0
+-- sql/004_orderbook_capture.sql
+psql:sql/004_orderbook_capture.sql:18: NOTICE:  relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:20: NOTICE:  relation "idx_clob_messages_asset_time" already exists, skipping
+psql:sql/004_orderbook_capture.sql:22: NOTICE:  relation "idx_clob_messages_condition_time" already exists, skipping
+psql:sql/004_orderbook_capture.sql:24: NOTICE:  relation "idx_clob_messages_type_time" already exists, skipping
+psql:sql/004_orderbook_capture.sql:40: NOTICE:  relation "clob_book_snapshots" already exists, skipping
+psql:sql/004_orderbook_capture.sql:42: NOTICE:  relation "idx_clob_snapshot_asset_venue" already exists, skipping
+psql:sql/004_orderbook_capture.sql:44: NOTICE:  relation "idx_clob_snapshot_asset_received" already exists, skipping
+psql:sql/004_orderbook_capture.sql:54: NOTICE:  relation "clob_capture_gaps" already exists, skipping
+psql:sql/004_orderbook_capture.sql:60: NOTICE:  column "invalidation_reason" of relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:62: NOTICE:  column "payload_sha256" of relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:64: NOTICE:  column "parser_error" of relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:66: NOTICE:  column "raw_frame_type" of relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:68: NOTICE:  column "received_monotonic_ns" of relation "clob_market_messages" already exists, skipping
+psql:sql/004_orderbook_capture.sql:70: NOTICE:  column "connection_attempt" of relation "clob_capture_gaps" already exists, skipping
+psql:sql/004_orderbook_capture.sql:72: NOTICE:  column "received_monotonic_ns" of relation "clob_book_snapshots" already exists, skipping
+exit=0
+tables: 33 indexes: 76
+122d15d3f09ba695e41e219ca46433fa  -
+         version         
+-------------------------
+ 001_initial
+ 002_wallet_intelligence
+ 003_wallet_activity
+ 004_orderbook_capture
+(4 rows)
+
+schema dump differs only by pg_dump random \restrict token (diff verified)

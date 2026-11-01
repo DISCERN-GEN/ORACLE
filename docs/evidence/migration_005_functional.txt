@@ -1,0 +1,53 @@
+== apply 005 twice
+exit=1
+0
+001_initial
+002_wallet_intelligence
+003_wallet_activity
+004_orderbook_capture
+005_capture_validity
+== functional
+ first_valid 
+-------------
+ t
+(1 row)
+
+ dup_valid_noop 
+----------------
+ f
+(1 row)
+
+ changed 
+---------
+       2
+(1 row)
+
+ repeat_noop 
+-------------
+           0
+(1 row)
+
+ asset_id |  state  |     invalid_since      | invalid_reason  
+----------+---------+------------------------+-----------------
+ A        | invalid | 2026-01-01 02:00:50+02 | connection_loss
+ B        | invalid | 2026-01-01 02:00:50+02 | connection_loss
+(2 rows)
+
+ revalid 
+---------
+ t
+(1 row)
+
+           t            | a_valid | b_valid | unknown_z 
+------------------------+---------+---------+-----------
+ 2026-01-01 00:00:05+00 | f       | f       | f
+ 2026-01-01 00:00:15+00 | t       | f       | f
+ 2026-01-01 00:00:49+00 | t       | f       | f
+ 2026-01-01 00:00:50+00 | f       | f       | f
+ 2026-01-01 00:01:10+00 | f       | f       | f
+ 2026-01-01 00:01:39+00 | f       | f       | f
+ 2026-01-01 00:01:40+00 | t       | f       | f
+(7 rows)
+
+ERROR:  clob_asset_validity_log is append-only
+CONTEXT:  PL/pgSQL function clob_validity_log_immutable() line 3 at RAISE

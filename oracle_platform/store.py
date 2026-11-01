@@ -517,17 +517,6 @@ class Store:
         return {"verified": True, "checked": len(rows), "head_hash": previous}
 
 
-
-def _parse_datetime(value: Any) -> datetime | None:
-    if not value:
-        return None
-    if isinstance(value, datetime):
-        return value
-    try:
-        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
-    except ValueError:
-        return None
-
     async def save_clob_raw_frame(self, raw_payload: Any, connection_id: str,
                                   received_at: datetime, monotonic_ns: int,
                                   frame_type: str = "json") -> int | None:
@@ -580,21 +569,47 @@ def _parse_datetime(value: Any) -> datetime | None:
                         json.dumps(event["bids"]), json.dumps(event["asks"]), message_id,
                         event["parser_version"],
                     )
+                    await conn.execute(
+                        "SELECT clob_mark_asset_valid($1,$2)",
+                        event["asset_id"], event["received_at"],
+                    )
 
     async def record_clob_capture_gap(self, connection_id: str, started_at: datetime,
-                                      ended_at: datetime, reason: str,
+                                      ended_at: datetime | None, reason: str,
                                       affected_asset_ids: list[str], attempt: int,
-                                      recovered_at: datetime | None = None) -> None:
+                                      recovered_at: datetime | None = None,
+                                      gap_kind: str = "connection_loss",
+                                      last_frame_at: datetime | None = None) -> int | None:
         if not self.pool:
-            return
+            return None
         async with self.pool.acquire() as conn:
-            await conn.execute(
+            return await conn.fetchval(
                 """INSERT INTO clob_capture_gaps(
-                       connection_id,started_at,ended_at,reason,affected_asset_ids,connection_attempt,recovered_at)
-                   VALUES($1,$2,$3,$4,$5::jsonb,$6,$7)""",
+                       connection_id,started_at,ended_at,reason,affected_asset_ids,connection_attempt,
+                       recovered_at,gap_kind,last_frame_at)
+                   VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9) RETURNING gap_id""",
                 connection_id, started_at, ended_at, reason, json.dumps(affected_asset_ids), attempt,
-                recovered_at,
+                recovered_at, gap_kind, last_frame_at,
             )
+
+    async def mark_clob_assets_invalid(self, asset_ids: list[str], since: datetime, reason: str,
+                                       gap_id: int | None = None) -> int:
+        """Invalidate order-book state from `since` until a fresh full snapshot arrives."""
+        if not self.pool or not asset_ids:
+            return 0
+        return int(await self.pool.fetchval(
+            "SELECT clob_mark_assets_invalid($1::text[],$2,$3,$4)", asset_ids, since, reason, gap_id))
+
+    async def last_clob_frame_time(self) -> datetime | None:
+        """Wall-clock receive time of the newest persisted frame, for restart gap detection."""
+        if not self.pool:
+            return None
+        return await self.pool.fetchval("SELECT max(received_at) FROM clob_market_messages")
+
+    async def clob_asset_valid_at(self, asset_id: str, at: datetime) -> bool:
+        if not self.pool:
+            return False
+        return bool(await self.pool.fetchval("SELECT clob_asset_valid_at($1,$2)", asset_id, at))
 
     async def save_clob_market_message(self, event: dict[str, Any]) -> int | None:
         """Compatibility helper for parsed test fixtures and controlled imports."""
@@ -605,3 +620,14 @@ def _parse_datetime(value: Any) -> datetime | None:
         if message_id is not None:
             await self.finalize_clob_raw_frame(message_id, event)
         return message_id
+
+
+def _parse_datetime(value: Any) -> datetime | None:
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return value
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None

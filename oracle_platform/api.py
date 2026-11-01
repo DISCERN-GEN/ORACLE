@@ -64,6 +64,9 @@ async def lifespan(_: FastAPI):
     book_capture_migration_path = Path(__file__).resolve().parent.parent / "sql" / "004_orderbook_capture.sql"
     await store.apply_migration_file(book_capture_migration_path)
     await store.require_schema("004_orderbook_capture")
+    validity_migration_path = Path(__file__).resolve().parent.parent / "sql" / "005_capture_validity.sql"
+    await store.apply_migration_file(validity_migration_path)
+    await store.require_schema("005_capture_validity")
     await store.fail_interrupted_sessions()
     yield
     await store.close()
