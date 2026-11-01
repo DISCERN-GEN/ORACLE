@@ -1,0 +1,23 @@
+ORACLE Private Build v0.4 working — local validation
+
+Python compileall: PASS
+Pytest: 49 passed
+API import/OpenAPI route registration: PASS using an asyncpg import stub; no database connection/runtime test
+Wallet routes registered:
+  GET  /v1/wallets/leaderboard
+  GET  /v1/wallets/{wallet_address}/trades
+  POST /v1/wallets/discover
+  POST /v1/wallets/ingest-trades
+  GET  /v1/wallets/ingestion-status
+  POST /v1/wallets/score
+
+Not run / not available in this environment:
+  - PostgreSQL 16 migration execution
+  - Docker / Docker Compose validation (Docker executable not installed)
+  - API request tests against a running FastAPI + PostgreSQL service
+  - Live Polymarket API discovery or trade-history ingestion
+  - 5,000-wallet coverage / 10,000-wallet scale test
+  - Next.js production build (node_modules not installed)
+  - 12-hour autonomous acceptance test (intentionally hard-locked)
+
+No real funds, signing keys, or live order execution are used or required.

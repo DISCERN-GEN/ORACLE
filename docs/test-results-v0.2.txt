@@ -1,0 +1,13 @@
+ORACLE Private Build v0.2 - local verification
+Date: 2026-11-01
+Command: ./scripts/verify.sh
+Result: 38 passed
+
+Additional checks:
+- python -m compileall -q oracle_platform tests: passed
+- FastAPI import and OpenAPI path generation with asyncpg import stub: passed (23 routes)
+- Shell syntax checks for all scripts: passed
+- No .env secret file included in build tree: confirmed
+
+Not run: Docker Compose, PostgreSQL SQL/integration, full FastAPI startup against DB,
+Next.js build, external Polymarket end-to-end session. See BUILD_STATUS_v0.2.md.

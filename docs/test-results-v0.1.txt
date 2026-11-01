@@ -1,0 +1,7 @@
+ORACLE Private Build v0.1 - local unit verification
+Date: 2026-11-01
+Command: ./scripts/verify.sh
+Result: 19 passed
+
+Not run: Docker Compose, PostgreSQL integration/migration, FastAPI runtime against DB,
+Next.js production build, live external API session. See BUILD_STATUS_v0.1.md.

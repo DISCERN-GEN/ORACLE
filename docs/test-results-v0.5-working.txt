@@ -1,0 +1,25 @@
+ORACLE v0.5 working build — local validation
+
+Command:
+  python -m compileall -q oracle_platform tests
+  pytest -q
+
+Result:
+  compileall: passed
+  pytest: 55 passed
+
+Coverage added in v0.5:
+  - Data API v2 standard wallet activity request contract
+  - start=1 full-history request and deposits/withdrawals inclusion flag
+  - independent opt-in TIP activity feed
+  - combo lifecycle activity adapter and opaque cursor
+  - normalized raw activity persistence shape
+  - missing amounts / fees / cashflow signs preserved as unknown
+  - separate cursors and resumable per-feed ingestion
+
+Not performed:
+  - live public API calls or 5,000-wallet batch
+  - PostgreSQL migration execution or query integration
+  - Docker/Compose build or runtime
+  - Next.js production build
+  - 12-hour autonomous paper test
